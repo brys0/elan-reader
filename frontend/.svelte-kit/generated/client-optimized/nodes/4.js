@@ -1,0 +1,1 @@
+export { default as component } from "../../../../src/routes/onboard/select-device/+page.svelte";

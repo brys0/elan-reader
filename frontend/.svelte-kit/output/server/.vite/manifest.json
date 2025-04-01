@@ -1,0 +1,140 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js"
+    ]
+  },
+  "_Fingerprint.js": {
+    "file": "chunks/Fingerprint.js",
+    "name": "Fingerprint",
+    "imports": [
+      "_index.js",
+      "_context.js"
+    ]
+  },
+  "_button.js": {
+    "file": "chunks/button.js",
+    "name": "button",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_context.js": {
+    "file": "chunks/context.js",
+    "name": "context",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports"
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "name": "index"
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "node_modules/@fontsource-variable/onest/files/onest-cyrillic-wght-normal.woff2": {
+    "file": "_app/immutable/assets/onest-cyrillic-wght-normal.DXI_y_WF.woff2",
+    "src": "node_modules/@fontsource-variable/onest/files/onest-cyrillic-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/onest/files/onest-latin-ext-wght-normal.woff2": {
+    "file": "_app/immutable/assets/onest-latin-ext-wght-normal.CnNj8hVb.woff2",
+    "src": "node_modules/@fontsource-variable/onest/files/onest-latin-ext-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/onest/files/onest-latin-wght-normal.woff2": {
+    "file": "_app/immutable/assets/onest-latin-wght-normal.CUIqqgP9.woff2",
+    "src": "node_modules/@fontsource-variable/onest/files/onest-latin-wght-normal.woff2"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "name": "entries/fallbacks/error.svelte",
+    "src": "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js"
+    ]
+  },
+  "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js",
+      "_exports.js",
+      "_index.js"
+    ]
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "css": [
+      "_app/immutable/assets/_layout.ognySD56.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/onest-cyrillic-wght-normal.DXI_y_WF.woff2",
+      "_app/immutable/assets/onest-latin-ext-wght-normal.CnNj8hVb.woff2",
+      "_app/immutable/assets/onest-latin-wght-normal.CUIqqgP9.woff2"
+    ]
+  },
+  "src/routes/+layout.ts": {
+    "file": "entries/pages/_layout.ts.js",
+    "name": "entries/pages/_layout.ts",
+    "src": "src/routes/+layout.ts",
+    "isEntry": true
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_Fingerprint.js",
+      "_button.js"
+    ]
+  },
+  "src/routes/onboard-error-ex/+page.svelte": {
+    "file": "entries/pages/onboard-error-ex/_page.svelte.js",
+    "name": "entries/pages/onboard-error-ex/_page.svelte",
+    "src": "src/routes/onboard-error-ex/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_button.js"
+    ]
+  },
+  "src/routes/onboard/+layout.svelte": {
+    "file": "entries/pages/onboard/_layout.svelte.js",
+    "name": "entries/pages/onboard/_layout.svelte",
+    "src": "src/routes/onboard/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_Fingerprint.js"
+    ]
+  },
+  "src/routes/onboard/select-device/+page.svelte": {
+    "file": "entries/pages/onboard/select-device/_page.svelte.js",
+    "name": "entries/pages/onboard/select-device/_page.svelte",
+    "src": "src/routes/onboard/select-device/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_context.js",
+      "_button.js"
+    ]
+  }
+}
