@@ -8,5 +8,5 @@
     let { children }: Props = $props();
 </script>
 
-<Fingerprint size={72} weight="fill" class="my-8" />
+<Fingerprint size={72} weight="fill" class="my-8 min-h-[72px]" />
 {@render children?.()}

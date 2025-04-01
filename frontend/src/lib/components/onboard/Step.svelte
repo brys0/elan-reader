@@ -3,13 +3,14 @@
 </script>
 
 <script lang="ts">
-    let { status = "incomplete" }: { status: Status } = $props();
+    import { cn } from "$lib/utils"
+    let { status = "incomplete" }: { status?: Status } = $props();
+
+    let background = {
+        complete: "bg-white",
+        error: "bg-red-500",
+        incomplete: "bg-white/15",
+    }
 </script>
 
-{#if status === "incomplete"}
-    <div class="w-4 h-4 bg-white/15 rounded-full"></div>
-{:else if status === "error"}
-    <div class="w-4 h-4 bg-red-500 rounded-full"></div>
-{:else}
-    <div class="w-4 h-4 bg-white rounded-full"></div>
-{/if}
+<div class={cn("w-4 h-4 rounded-full", background[status])}></div>

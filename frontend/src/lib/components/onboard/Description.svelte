@@ -1,7 +1,8 @@
 <script lang="ts">
-    let { children } = $props();
+    import { cn } from "$lib/utils";
+    let { children, class: className = "" } = $props();
 </script>
 
-<div class="max-w-[75%] font-light mt-4 text-center">
+<div class={cn("max-w-[75%] font-light mt-4 text-center", className)}>
     {@render children?.()}
 </div>

@@ -53,7 +53,7 @@ func main() {
 			Backdrop:                application.MacBackdropTranslucent,
 			TitleBar:                application.MacTitleBarHiddenInset,
 		},
-		Frameless: true,
+		Frameless: false,
 
 		MinWidth:         380,
 		MinHeight:        600,

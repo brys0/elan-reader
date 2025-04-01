@@ -1,8 +1,7 @@
-import type { LayoutLoad } from "./$types";
 export const prerender = true;
 export const ssr = false;
 
-export const load: LayoutLoad = ({ url }) => {
+export const load = ({ url }) => {
   const { pathname } = url;
 
   return {

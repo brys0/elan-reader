@@ -57,8 +57,8 @@ const config: Config = {
 					accent: "hsl(var(--sidebar-accent))",
 					"accent-foreground": "hsl(var(--sidebar-accent-foreground))",
 					border: "hsl(var(--sidebar-border))",
-					ring: "hsl(var(--sidebar-ring))",
-        		},
+					ring: "hsl(var(--sidebar-ring) / <alpha-value>)",
+        		}
 			},
 			borderRadius: {
 				xl: "calc(var(--radius) + 4px)",
@@ -67,7 +67,10 @@ const config: Config = {
 				sm: "calc(var(--radius) - 4px)"
 			},
 			fontFamily: {
-				sans: [...fontFamily.sans]
+				sans: [...fontFamily.sans],
+				app: "var(--font-app)",
+				mono: "var(--font-mono)",
+				spacegrotesk: "var(--font-spacegrotesk)",
 			},
 			keyframes: {
 				"accordion-down": {
@@ -82,11 +85,17 @@ const config: Config = {
 					"0%,70%,100%": { opacity: "1" },
 					"20%,50%": { opacity: "0" },
 				},
+				"scan": {
+					from: { top: "0%" },
+					"50%": { top: "100%" },
+					"100%": { top: "0%" },
+				},
 			},
 			animation: {
         		"accordion-down": "accordion-down 0.2s ease-out",
         		"accordion-up": "accordion-up 0.2s ease-out",
        			"caret-blink": "caret-blink 1.25s ease-out infinite",
+       			"scan": "scan 3s ease-out infinite",
       		},
 		},
 	},
