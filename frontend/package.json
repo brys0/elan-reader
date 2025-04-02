@@ -30,6 +30,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@aarsteinmedia/dotlottie-player-light": "^5.2.0",
 		"@fontsource-variable/onest": "^5.2.7",
 		"@fontsource-variable/space-grotesk": "^5.2.6",
 		"@lottiefiles/dotlottie-svelte": "^0.5.1",

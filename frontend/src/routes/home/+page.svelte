@@ -40,9 +40,13 @@
             // 50/50 chance to fail for testing purposes
             if (Math.random() < 0.5) {
                 let errors = [
-                    "Move your finger a little to the left",
-                    "Move your finger a little to right",
-                    "Finger not detected",
+                    "Move your finger slightly down", // 0x41
+                    "Move your finger slightly right", // 0x42
+                    "Move your finger slightly up", // 0x43
+                    "Move your finger slightly to the left", // 0x44
+                    "Clean off your sensor", // 0xfb
+                    "This finger has not been enrolled yet", // 0xfd
+                    "Place more of your finger on the sensor", // 0xfe
                 ]
                 completed = true
                 error = errors[~~(Math.random() * errors.length)]
@@ -60,16 +64,16 @@
 </script>
 
 <div class="flex flex-col gap-10 items-center justify-between pt-20 p-8 w-full h-full">
-    <div class="flex flex-col gap-10 items-center">
-        <div class={cn("flex items-center gap-2 animate-none drop-shadow-lg", scanning && "animate-pulse")}>
+    <div class="flex flex-col gap-10 items-center select-none">
+        <div class={cn("flex items-center gap-2 animate-none drop-shadow-lg select-none", scanning && "animate-pulse")}>
             <print.icon size={18} weight="bold" class={cn(print.loader && "animate-spin")} />
-            <p class="font-spacegrotesk">
+            <p>
                 {print.message}
             </p>
         </div>
-        <Fingerprint bind:scanning bind:completed onScan={scan}  />
+        <Fingerprint bind:scanning bind:completed onScan={scan}/>
         {#if error}
-            <div transition:fly={{ y: -20 }} class="py-1.5 px-2 text-center rounded-xl bg-secondary/40 drop-shadow-lg w-full text-sm font-mono text-red-500">
+            <div transition:fly={{ y: -20 }} class="py-1.5 px-2 text-center select-none rounded-xl drop-shadow-lg w-full text-sm font-mono text-red-500">
                 {error}
             </div>
         {/if}

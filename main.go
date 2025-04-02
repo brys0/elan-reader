@@ -53,8 +53,13 @@ func main() {
 			Backdrop:                application.MacBackdropTranslucent,
 			TitleBar:                application.MacTitleBarHiddenInset,
 		},
-		Frameless: false,
-
+		Linux: application.LinuxWindow{
+			// This fixes some weirdness on Wayland. Because the app isn't very intensive we
+			// could consider making this WebviewGpuPolicyNever by default
+			// and create a togglable option to enable it if a user really wants it.
+			WebviewGpuPolicy: application.WebviewGpuPolicyNever,
+		},
+		Frameless:        false,
 		MinWidth:         380,
 		MinHeight:        600,
 		MaxWidth:         380,
