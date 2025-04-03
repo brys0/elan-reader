@@ -1,14 +1,26 @@
 <script lang="ts">
-    import { Fingerprint } from "$lib/components/fingerprint";
-    import type { IconComponentProps } from "phosphor-svelte";
-    import CircleNotch from "phosphor-svelte/lib/CircleNotch";
-    import { Button } from "$lib/components/ui/button";
-    import Check from "phosphor-svelte/lib/Check";
-    import Scan from "phosphor-svelte/lib/Scan";
-    import { fly } from "svelte/transition";
-    import type { Component } from "svelte";
-    import X from "phosphor-svelte/lib/X";
-    import { cn } from "$lib/utils";
+    import { Fingerprint } from "$lib/components/fingerprint"
+    import { type IconComponentProps } from "phosphor-svelte"
+    import { Scanner, type ElanScanner } from "$lib/Scanner"
+    import { StatusResolver } from "$lib/StatusResolver"
+    import { Button } from "$lib/components/ui/button"
+    import { settingsModal } from "$lib/Stores"
+    import { fly } from "svelte/transition"
+    import type { Component } from "svelte"
+    import { cn, wait } from "$lib/utils"
+
+    import CircleNotch from "phosphor-svelte/lib/CircleNotch"
+    import GearSix from "phosphor-svelte/lib/GearSix"
+    import Check from "phosphor-svelte/lib/Check"
+    import Scan from "phosphor-svelte/lib/Scan"
+    import X from "phosphor-svelte/lib/X"
+    
+    let hardwareAccel = $state(true);
+    let selected = $state({
+        scanner: "elan-arm-m4",
+        print: "xum0unx4"
+    })
+    let scanner: null | ElanScanner = $state(null)
 
     type State = {
         message: string
@@ -28,43 +40,68 @@
     let print: State = $state(states.ready)
     let error: string | null = $state(null)
 
-    // POC flow for scan
-    function scan() {
-        let randomDuration = ~~(Math.random() * 6000) + 1000
-        error = null
-        scanning = true
-        completed = false
-        print = states.scanning
-        setTimeout(() => {
+    // POC flow for scan using events
+    async function scan() {
+        if (!scanner) scanner = new Scanner()
+        scanner.on("start", () => {
+            error = null
+            scanning = true
+            completed = false
+            print = states.scanning
+        })
+        scanner.on("complete", async () => {
+            print = states.success
             scanning = false
-            // 50/50 chance to fail for testing purposes
-            if (Math.random() < 0.5) {
-                let errors = [
-                    "Move your finger slightly down", // 0x41
-                    "Move your finger slightly right", // 0x42
-                    "Move your finger slightly up", // 0x43
-                    "Move your finger slightly to the left", // 0x44
-                    "Clean off your sensor", // 0xfb
-                    "This finger has not been enrolled yet", // 0xfd
-                    "Place more of your finger on the sensor", // 0xfe
-                ]
-                completed = true
-                error = errors[~~(Math.random() * errors.length)]
-                return print = states.error
-            } else {
-                print = states.success
-                setTimeout(() => {
-                    completed = true
-                    print = states.ready
-                }, 2000)
-            }
-        }, randomDuration)
+            await wait(2000)
+            completed = true
+            print = states.ready
+        })
+        scanner.on("error", (e) => {
+            completed = true
+            scanning = false
+            error = e
+            return print = states.error
+        })
+        await scanner.scan()
     }
+
+    // POC flow for scan
+    // async function scanOld() {
+    //     let randomDuration = ~~(Math.random() * 6000) + 1000
+    //     error = null
+    //     scanning = true
+    //     completed = false
+    //     print = states.scanning
+    //     await wait(randomDuration)
+    //     scanning = false
+    //     // 50/50 chance to fail for testing purposes
+    //     if (Math.random() < 0.5) {
+    //         let status = Object.values(StatusResolver.STATUS_CODES)
+    //         completed = true
+    //         error = status[~~(Math.random() * status.length)]
+    //         return print = states.error
+    //     } else {
+    //         print = states.success
+    //         await wait(2000)
+    //         completed = true
+    //         print = states.ready
+    //     }
+    // }
+
+    $effect(() => {
+
+        return () => {
+            scanner = null
+        }
+    })
 
 </script>
 
-<div class="flex flex-col gap-10 items-center justify-between pt-20 p-8 w-full h-full">
-    <div class="flex flex-col gap-10 items-center select-none">
+<div class="flex flex-col gap-10 items-center p-8 w-full h-full justify-between">
+    <Button onclick={settingsModal.open} size="icon" variant="outline" class="absolute top-4 right-4 max-w-9 max-h-9 z-[9999]">
+        <GearSix weight="fill" class="!size-6 fill-muted-foreground" />
+    </Button>
+    <div class="flex flex-col gap-8 my-10 items-center select-none">
         <div class={cn("flex items-center gap-2 animate-none drop-shadow-lg select-none", scanning && "animate-pulse")}>
             <print.icon size={18} weight="bold" class={cn(print.loader && "animate-spin")} />
             <p>

@@ -3,5 +3,6 @@ bin
 frontend/dist
 frontend/.svelte-kit
 frontend/node_modules
+frontend/vite.*.timestamp*
 build/linux/appimage/build
 build/windows/nsis/MicrosoftEdgeWebview2Setup.exe

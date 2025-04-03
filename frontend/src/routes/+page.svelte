@@ -3,7 +3,7 @@
     import { Button } from "$lib/components/ui/button/index";
 
     // determins if the button will go straight to the home page or start onboarding
-    let onboarded = $state(false)
+    let onboarded = $state(true)
 </script>
 
 <div class="h-full flex justify-center items-center gap-4 flex-col">
