@@ -16,6 +16,10 @@ func (m *MockDriverService) Init() {
 	m.mock_driver = elan.NewMockDriver()
 }
 
+func (m *MockDriverService) Total() (*uint8, error) {
+	return m.mock_driver.Total()
+}
+
 func (m *MockDriverService) Verify() (*bool, error) {
 	channel := make(chan elan.ChannelMessage)
 
