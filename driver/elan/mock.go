@@ -8,6 +8,7 @@ import (
 	users "os/user"
 	"slices"
 	"time"
+	// charmlog "github.com/charmbracelet/log"
 )
 
 // This contains the code of the "mock" or fake driver.
@@ -18,12 +19,15 @@ type MockDevice struct {
 }
 
 type MockDriver struct {
+	// log    *charmlog.Logger
 	device *MockDevice
 	driver
 }
 
 func NewMockDriver() *MockDriver {
+	// log := charmlog.With("driver", "mock")
 	return &MockDriver{
+		// log: charmlog.With("", ""),
 		device: &MockDevice{
 			enrolled_fingers: map[uint8]*Finger{
 				0: &Finger{
@@ -40,13 +44,13 @@ func NewMockDriver() *MockDriver {
 }
 
 func (d *MockDriver) Total() (*uint8, error) {
-	total_fingers := uint8(len(d.device.enrolled_fingers))
+	totalEnrolled := uint8(len(d.device.enrolled_fingers))
 
-	fmt.Printf("[Driver] Got total fingers: %v\n", total_fingers)
-	return &total_fingers, nil
+	fmt.Printf("[Driver] Got total fingers: %v\n", totalEnrolled)
+	return &totalEnrolled, nil
 }
 
-func (d *MockDriver) Verify(max_attempts uint8, channel *chan ChannelMessage) (bool, error) {
+func (d *MockDriver) Verify(maxAttempts uint8, ch *chan ChannelMessage) (bool, error) {
 	total, err := d.Total()
 
 	if err != nil {
@@ -54,11 +58,10 @@ func (d *MockDriver) Verify(max_attempts uint8, channel *chan ChannelMessage) (b
 	}
 
 	if *total == 0 {
-		fmt.Printf("[Driver] No fingers enrolled\n")
 		return false, errors.New("no fingers enrolled")
 	}
 
-	send_random_error(channel)
+	sendRandomError(ch)
 
 	// Manually sleep to fake user interaction
 	time.Sleep(3 * time.Second)
@@ -66,41 +69,42 @@ func (d *MockDriver) Verify(max_attempts uint8, channel *chan ChannelMessage) (b
 	return true, nil
 }
 
-func (d *MockDriver) Enroll(total_samples uint8, data string, channel *chan ChannelMessage) error {
-
+func (d *MockDriver) Enroll(totalSamples uint8, data string, ch *chan ChannelMessage) error {
 	total, err := d.Total()
-	next_id := *total + 1
+	if err != nil {
+		return fmt.Errorf("failed to get total enrolled fingers: %w", err)
+	}
+	nextID := *total + 1
 
-	if err != nil || next_id == 9 {
-		*channel <- ERROR_MAX_ENROLLED
-
-		return errors.New("max number enrolled")
+	if nextID == maxEnrollments {
+		if ch != nil {
+			*ch <- ERROR_MAX_ENROLLED
+		}
+		return errors.New("maximum number of fingers already enrolled")
 	}
 
-	send_random_error(channel)
+	sendRandomError(ch)
 	time.Sleep(3 * time.Second)
 
-	for range total_samples {
-		if channel != nil {
-			defer close(*channel)
-
-			*channel <- SAMPLE_VALID
-			println("Sent valid sample")
-			time.Sleep(time.Millisecond * 250)
+	for range totalSamples {
+		if ch == nil {
+			continue
 		}
+
+		*ch <- SAMPLE_VALID
+		time.Sleep(time.Millisecond * 250)
 	}
 
-	sys_user, err := users.Current()
-
+	systemUser, err := users.Current()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get current user: %w", err)
 	}
 
-	d.device.enrolled_fingers[next_id] = &Finger{
-		ID: next_id,
+	d.device.enrolled_fingers[nextID] = &Finger{
+		ID: nextID,
 		OwnedBy: User{
-			ID:   sys_user.Uid,
-			Name: sys_user.Name,
+			ID:   systemUser.Uid,
+			Name: systemUser.Name,
 		},
 		Data: data,
 	}
@@ -115,7 +119,7 @@ func (d *MockDriver) Info(id uint8) (*Finger, error) {
 		return nil, errors.New("finger with that id not recongized")
 	}
 
-	valid_access, err := finger_owned_by_current_user(finger)
+	valid_access, err := isCreator(finger)
 
 	if err != nil {
 		return nil, err
@@ -131,7 +135,7 @@ func (d *MockDriver) Info(id uint8) (*Finger, error) {
 
 func (d *MockDriver) InfoAll() ([]*Finger, error) {
 	values := slices.Collect(maps.Values(d.device.enrolled_fingers))
-	finger_arr := make([]*Finger, 0)
+	fingers := make([]*Finger, 0)
 
 	current_user, err := users.Current()
 
@@ -142,14 +146,14 @@ func (d *MockDriver) InfoAll() ([]*Finger, error) {
 	for _, finger := range values {
 
 		if finger.OwnedBy.ID != current_user.Uid {
-			finger_arr = append(finger_arr, nil)
+			fingers = append(fingers, nil)
 			continue
 		}
 
-		finger_arr = append(finger_arr, finger)
+		fingers = append(fingers, finger)
 	}
 
-	return finger_arr, nil
+	return fingers, nil
 }
 
 func (d *MockDriver) Delete(id uint8) (bool, error) {
@@ -159,7 +163,7 @@ func (d *MockDriver) Delete(id uint8) (bool, error) {
 		return false, errors.New("finger with that id does not exist")
 	}
 
-	valid_access, err := finger_owned_by_current_user(finger)
+	valid_access, err := isCreator(finger)
 
 	if err != nil {
 		return false, err
@@ -191,32 +195,36 @@ func (d *MockDriver) Reset() error {
 	return d.DeleteAll()
 }
 
-func finger_owned_by_current_user(finger *Finger) (bool, error) {
+func isCreator(f *Finger) (bool, error) {
 	// This is cached so we don't have to worry about the performance penalty
-	current_user, err := users.Current()
+	currentUser, err := users.Current()
 
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("failed to get current user: %w", err)
 	}
 
-	if finger.OwnedBy.ID != current_user.Uid {
+	if f.OwnedBy.ID != currentUser.Uid {
 		return false, nil
 	}
 
 	return true, nil
 }
 
-func send_random_error(channel *chan ChannelMessage) {
-	if channel == nil {
+func sendRandomError(ch *chan ChannelMessage) {
+	if ch == nil {
 		return
 	}
 
-	max := 8
-	min := 1
+	const (
+		// Set max to last error iota
+		max = int(ERROR_UNKNOWN)
+		// Set min to first error state
+		min = int(ERROR_SLIGHT_DOWN)
+	)
 
-	msg := ChannelMessage(rand.Intn(max-min) + min)
+	errorMessage := ChannelMessage(rand.Intn(max-min) + min)
 
-	fmt.Printf("[Driver] Sent random channel error %v\n", msg)
+	fmt.Printf("[Driver] Sent random channel error %v\n", errorMessage)
 	// Generates us a random error everytime, and sends it thru the error channel
-	*channel <- msg
+	*ch <- errorMessage
 }

@@ -1,8 +1,9 @@
 package elan
 
 const (
-	SAMPLE_VALID = ChannelMessage(iota)
+	maxEnrollments = 10
 
+	SAMPLE_VALID = ChannelMessage(iota)
 	ERROR_SLIGHT_DOWN
 	ERROR_SLIGHT_RIGHT
 	ERROR_SLIGHT_UP
@@ -22,12 +23,12 @@ type driver interface {
 
 	// Verifies an individual finger with the max_attempts you would like to consider before failing
 	// Optionally you can specify a channel that will receive events as the user is verifying their finger, use nil if you want to opt-out
-	Verify(max_attempts uint8, channel *chan ChannelMessage) (bool, error)
+	Verify(maxAttempts uint8, ch *chan ChannelMessage) (bool, error)
 
 	// Enrolls a new finger
 	// Additionally, also allows an abitrary string storage up 61 chars (4 chars are taken up by the user id itself)
 	// Optionally you can specify a channel that will receive events as the user is verifying their finger, use nil if you want to opt-out
-	Enroll(total_samples uint8, data string, channel *chan ChannelMessage) error
+	Enroll(totalSamples uint8, data string, ch *chan ChannelMessage) error
 
 	// Gets the info for a finger
 	// This will return an error if the finger is registered by a different user

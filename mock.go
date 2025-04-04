@@ -21,48 +21,39 @@ func (m *MockDriverService) Total() (*uint8, error) {
 }
 
 func (m *MockDriverService) Verify() (bool, error) {
-	channel := make(chan elan.ChannelMessage)
+	ch := make(chan elan.ChannelMessage)
+	defer close(ch)
 
 	go func() {
-		for {
-			msg, ok := <-channel
-
-			if !ok {
-				return
-			}
-
+		for msg := range ch {
 			m.app.EmitEvent("error", msg)
 		}
 	}()
 
-	return m.mock_driver.Verify(8, &channel)
+	return m.mock_driver.Verify(8, &ch)
 }
 
-func (m *MockDriverService) Enroll(total_samples uint8, data string) error {
-	channel := make(chan elan.ChannelMessage)
-	current_enrollments := 0
+func (m *MockDriverService) Enroll(totalSamples uint8, data string) error {
+	ch := make(chan elan.ChannelMessage)
+	defer close(ch)
+
+	currentSample := 0
 
 	go func() {
-		for {
-			msg, ok := <-channel
-
-			if !ok {
-				return
-			}
-
+		for msg := range ch {
 			if msg != elan.SAMPLE_VALID {
 				m.app.EmitEvent("error", msg)
 				continue
 			}
 
-			current_enrollments++
+			currentSample++
 
 			// This should probably emit a structured json reponse for the frontend instead
-			m.app.EmitEvent("enroll", fmt.Sprintf("%d/%d", current_enrollments, total_samples))
+			m.app.EmitEvent("enroll", fmt.Sprintf("%d/%d", currentSample, totalSamples))
 		}
 	}()
 
-	return m.mock_driver.Enroll(total_samples, data, &channel)
+	return m.mock_driver.Enroll(totalSamples, data, &ch)
 }
 
 func (m *MockDriverService) Info(id uint8) (*elan.Finger, error) {
