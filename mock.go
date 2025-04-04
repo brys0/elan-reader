@@ -21,7 +21,13 @@ func (m *MockDriverService) Verify() (*bool, error) {
 
 	go func() {
 		for {
-			m.app.EmitEvent("error", <-channel)
+			msg, ok := <-channel
+
+			if !ok {
+				return
+			}
+
+			m.app.EmitEvent("error", msg)
 		}
 	}()
 
@@ -34,7 +40,12 @@ func (m *MockDriverService) Enroll(total_samples uint8, data string) error {
 
 	go func() {
 		for {
-			msg := <-channel
+			msg, ok := <-channel
+
+			if !ok {
+				return
+			}
+
 			if msg != elan.SAMPLE_VALID {
 				m.app.EmitEvent("error", msg)
 				continue
