@@ -12,7 +12,7 @@ type MockDriverService struct {
 	mock_driver *elan.MockDriver
 }
 
-func (m *MockDriverService) Init() {
+func (m *MockDriverService) init() {
 	m.mock_driver = elan.NewMockDriver()
 }
 
@@ -20,7 +20,7 @@ func (m *MockDriverService) Total() (*uint8, error) {
 	return m.mock_driver.Total()
 }
 
-func (m *MockDriverService) Verify() (*bool, error) {
+func (m *MockDriverService) Verify() (bool, error) {
 	channel := make(chan elan.ChannelMessage)
 
 	go func() {
@@ -57,9 +57,30 @@ func (m *MockDriverService) Enroll(total_samples uint8, data string) error {
 
 			current_enrollments++
 
+			// This should probably emit a structured json reponse for the frontend instead
 			m.app.EmitEvent("enroll", fmt.Sprintf("%d/%d", current_enrollments, total_samples))
 		}
 	}()
 
 	return m.mock_driver.Enroll(total_samples, data, &channel)
+}
+
+func (m *MockDriverService) Info(id uint8) (*elan.Finger, error) {
+	return m.mock_driver.Info(id)
+}
+
+func (m *MockDriverService) InfoAll() ([]*elan.Finger, error) {
+	return m.mock_driver.InfoAll()
+}
+
+func (m *MockDriverService) Delete(id uint8) (bool, error) {
+	return m.mock_driver.Delete(id)
+}
+
+func (m *MockDriverService) DeleteAll() error {
+	return m.mock_driver.DeleteAll()
+}
+
+func (m *MockDriverService) Reset() error {
+	return m.mock_driver.Reset()
 }

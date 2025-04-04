@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 tasks:
   go:mod:tidy:
@@ -17,7 +17,7 @@ tasks:
       - node_modules/*
     preconditions:
       - sh: bun --version
-        msg: "Looks like bun inst installed"
+        msg: "Looks like bun isn't installed"
     cmds:
       - bun install
 
@@ -37,7 +37,6 @@ tasks:
       PRODUCTION: '{{.PRODUCTION | default "false"}}'
     vars:
       BUILD_COMMAND: '{{if eq .PRODUCTION "true"}}build{{else}}build:dev{{end}}'
-
 
   generate:bindings:
     summary: Generates bindings for the frontend

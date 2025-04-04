@@ -43,9 +43,8 @@ func main() {
 	})
 
 	mock_service.app = app
-	mock_service.Init()
+	mock_service.init()
 
-	app.EmitEvent("me", "bruh")
 	// Create a new window with the necessary options.
 	// 'Title' is the title of the window.
 	// 'Mac' options tailor the window when running on macOS.
