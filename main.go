@@ -3,9 +3,11 @@ package main
 import (
 	"embed"
 	_ "embed"
-	"log"
+	"log/slog"
+	"os"
 	"time"
 
+	"github.com/charmbracelet/log"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -21,8 +23,19 @@ var assets embed.FS
 // and starts a goroutine that emits a time-based event every second. It subsequently runs the application and
 // logs any error that might occur.
 func main() {
-	mock_service := MockDriverService{}
+	logger := log.With("app", "elan-reader")
 
+	logLevelEnv := os.Getenv("LOG_LEVEL")
+
+	logLevel, err := log.ParseLevel(logLevelEnv)
+	if err != nil {
+		logger.Fatal("invalid log level", "must specify valid log level ex: -level debug")
+	}
+
+	mock_service := DriverService{}
+
+	logger.SetLevel(logLevel)
+	mock_service.level = logLevel
 	// Create a new Wails application by providing the necessary options.
 	// Variables 'Name' and 'Description' are for application metadata.
 	// 'Assets' configures the asset server with the 'FS' variable pointing to the frontend files.
@@ -40,6 +53,7 @@ func main() {
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
+		LogLevel: slog.LevelWarn,
 	})
 
 	mock_service.app = app
@@ -83,7 +97,7 @@ func main() {
 	}()
 
 	// Run the application. This blocks until the application has been exited.
-	err := app.Run()
+	err = app.Run()
 
 	// If an error occurred while running the application, log it and exit.
 	if err != nil {

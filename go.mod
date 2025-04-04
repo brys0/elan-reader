@@ -12,7 +12,6 @@ require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/charmbracelet/lipgloss v1.0.0 // indirect
-	github.com/charmbracelet/log v0.4.1 // indirect
 	github.com/charmbracelet/x/ansi v0.4.2 // indirect
 	github.com/cloudflare/circl v1.3.8 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
@@ -56,6 +55,9 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
 
-require github.com/brys0/elan-driver-go v0.0.0
+require (
+	github.com/brys0/elan-driver-go v0.0.0
+	github.com/charmbracelet/log v0.4.1
+)
 
 replace github.com/brys0/elan-driver-go v0.0.0 => ./driver
