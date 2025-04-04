@@ -6,7 +6,7 @@
     import {
         Verify,
         Enroll,
-    } from "../../../bindings/changeme/mockdriverservice";
+    } from "$bindings";
 
     let verifyState = $state(null as any);
     let enrollState = $state(null as any);

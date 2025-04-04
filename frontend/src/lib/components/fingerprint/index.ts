@@ -1,5 +1,7 @@
-import Root from "./fingerprint.svelte"
+import FingerprintVerifyRoot from "./fingerprint-verify.svelte"
+import FingerprintEnrollRoot from "./fingerprint-enroll.svelte"
 
 export {
-    Root as Fingerprint
+    FingerprintVerifyRoot as FingerprintVerify,
+    FingerprintEnrollRoot as FingerprintEnroll
 }
