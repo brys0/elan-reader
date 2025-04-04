@@ -38,7 +38,7 @@
 		"@sveltejs/adapter-static": "^3.0.5",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@types/node": "^22.14.0",
-		"@wailsio/runtime": "^3.0.0-alpha.28",
+		"@wailsio/runtime": "^3.0.0-alpha.66",
 		"events": "^3.3.0",
 		"svelte-motion": "^0.12.2"
 	}

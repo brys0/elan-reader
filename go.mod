@@ -1,8 +1,6 @@
 module changeme
 
-go 1.22.4
-
-toolchain go1.23.7
+go 1.23.7
 
 require github.com/wailsapp/wails/v3 v3.0.0-alpha.9
 
@@ -50,3 +48,7 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
+
+require github.com/brys0/elan-driver-go v0.0.0
+
+replace github.com/brys0/elan-driver-go v0.0.0 => ./driver
