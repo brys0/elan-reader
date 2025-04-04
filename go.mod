@@ -1,4 +1,4 @@
-module changeme
+module github.com/brys0/elan-reader
 
 go 1.23.7
 

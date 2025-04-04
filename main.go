@@ -24,12 +24,17 @@ var assets embed.FS
 // logs any error that might occur.
 func main() {
 	logger := log.With("app", "elan-reader")
-
 	logLevelEnv := os.Getenv("LOG_LEVEL")
+	logLevel := log.InfoLevel
 
-	logLevel, err := log.ParseLevel(logLevelEnv)
-	if err != nil {
-		logger.Fatal("invalid log level", "must specify valid log level ex: -level debug")
+	if logLevelEnv != "" {
+		lvl, err := log.ParseLevel(logLevelEnv)
+
+		if err != nil {
+			logger.Fatal("invalid log level", "must specify valid log level ex: LOG_LEVEL=debug")
+		}
+
+		logLevel = lvl
 	}
 
 	mock_service := DriverService{}
@@ -97,7 +102,7 @@ func main() {
 	}()
 
 	// Run the application. This blocks until the application has been exited.
-	err = app.Run()
+	err := app.Run()
 
 	// If an error occurred while running the application, log it and exit.
 	if err != nil {
