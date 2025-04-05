@@ -74,7 +74,8 @@ func (m *DriverService) InfoAll() ([]*elan.Finger, error) {
 }
 
 func (m *DriverService) Delete(id uint8) (bool, error) {
-	return m.driver.Delete(id)
+	delete, err := m.driver.Delete(id)
+	return delete, err
 }
 
 func (m *DriverService) DeleteAll() error {

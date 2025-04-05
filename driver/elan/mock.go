@@ -185,21 +185,25 @@ func (d *MockDriver) Delete(id uint8) (bool, error) {
 	finger, ok := d.device.enrolled_fingers[id]
 
 	if !ok {
+		log.Error("finger with that id does not exist")
 		return false, errors.New("finger with that id does not exist")
 	}
 
 	valid_access, err := isCreator(finger)
 
 	if err != nil {
+		log.Error("could not get current user", "err", err)
 		return false, err
 	}
 
 	if !valid_access {
+		log.Error("user does not match one stored on fingerprint")
 		return false, nil
 	}
 
-	d.device.enrolled_fingers[id] = nil
+	delete(d.device.enrolled_fingers, id)
 
+	log.Info("deleted fingerprint", *d.device)
 	return true, nil
 }
 
@@ -212,11 +216,13 @@ func (d *MockDriver) DeleteAll() error {
 		}
 	}
 
+	log.Info("deleted all stored & owned fingerprints")
 	return nil
 }
 
 // Alias to DeleteAll(), this will not be the case in the actual driver
 func (d *MockDriver) Reset() error {
+	log.Warn("resetting the device")
 	return d.DeleteAll()
 }
 
@@ -249,6 +255,7 @@ func (d *MockDriver) sendRandomError(ch *chan ChannelMessage) {
 
 	errorMessage := ChannelMessage(rand.Intn(max-min) + min)
 
+	log.Debug("sending a randomly generated error on the channel", "err", ChannelMessageString(errorMessage))
 	// Generates us a random error everytime, and sends it thru the error channel
 	*ch <- errorMessage
 }
