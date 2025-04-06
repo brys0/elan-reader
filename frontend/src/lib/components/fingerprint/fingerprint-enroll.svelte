@@ -17,7 +17,11 @@
     import { fly } from "svelte/transition";
     import { onMount } from "svelte";
 
+    import { useFingerprintStore } from "$lib/Stores.svelte";
+
     let { disabled = $bindable() } = $props();
+
+    const { } = useFingerprintStore();
 
     let fingerprint: DotLottiePlayer | null = $state(null);
     let scanning: boolean = $state(false);
@@ -53,8 +57,8 @@
     }
 
     onMount(async () => {
-        let devices = await Delete(2);
-        console.log(devices);
+        // let devices = await Delete(2);
+        // console.log(devices);
     });
 
     $effect(() => {

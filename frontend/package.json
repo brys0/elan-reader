@@ -40,6 +40,7 @@
 		"@types/node": "^22.14.0",
 		"@wailsio/runtime": "^3.0.0-alpha.66",
 		"events": "^3.3.0",
+		"katai": "^0.1.5",
 		"svelte-motion": "^0.12.2"
 	}
 }
