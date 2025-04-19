@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/brys0/elan-driver-go/driver"
 	"github.com/google/gousb"
 )
 
@@ -23,7 +22,9 @@ const (
 	IMG_START_CMD     = byte('\x00')
 )
 
-func ErrorInfo(err byte) driver.ChannelMessage {
+type ChannelMessage (uint8)
+
+func ErrorInfo(err byte) ChannelMessage {
 	switch err {
 	case 0x41:
 		return driver.ERROR_SLIGHT_DOWN

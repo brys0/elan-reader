@@ -59,6 +59,10 @@ func (d *HardwareDriver) Total() (*uint8, error) {
 	return &read_int, nil
 }
 
+func (d *HardwareDriver) Verify() {
+
+}
+
 // func (d *HardwareDriver) Verify(maxAttempts uint8, ch *chan ChannelMessage) (bool, error) {
 // 	total, err := d.Total()
 
