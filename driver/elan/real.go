@@ -2,6 +2,7 @@ package elan
 
 import (
 	"github.com/google/gousb"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -38,7 +39,7 @@ func (d *HardwareDriver) Total() (*uint8, error) {
 	cmd[2] = VERIFY_CMD
 
 	writtenLength, err := out.Write(cmd)
-	err = CheckLength(writtenLength, 3)
+	err = CheckLength(writtenLength, allocate_command)
 
 	if err != nil {
 		return nil, err
@@ -58,23 +59,31 @@ func (d *HardwareDriver) Total() (*uint8, error) {
 	return &read_int, nil
 }
 
-func (d *HardwareDriver) Verify() {
+func (d *HardwareDriver) Verify(maxAttempts uint8, ch *chan ChannelMessage) (bool, error) {
+	total, err := d.Total()
+
+	if err != nil {
+		return false, err
+	}
+
+	if *total < 1 {
+		return false, errors.New("there is no currently enrolled fingerprints")
+	}
+
+	out, in, err := CreateOutInEndpoint(d.iface)
+
+	if err != nil {
+		return false, err
+	}
+
+	cmd := CommandStart(allocate_command)
+	cmd[2] = VERIFY_CMD
+
+	writtenLength, err := out.Write(cmd)
+	err = CheckLength(writtenLength, allocate_command)
+
+	if err != nil {
+		return false, err
+	}
 
 }
-
-// func (d *HardwareDriver) Verify(maxAttempts uint8, ch *chan ChannelMessage) (bool, error) {
-// 	total, err := d.Total()
-
-// 	if err != nil {
-// 		return false, err
-// 	}
-
-// 	out, in, err := usb.CreateOutInEndpoint(d.iface)
-
-// 	if err != nil {
-// 		return false, err
-// 	}
-
-// 	write := usb.CommandStart(3)
-
-// }
