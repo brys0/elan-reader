@@ -1,4 +1,4 @@
-package usb
+package elan
 
 import (
 	"bytes"
@@ -21,29 +21,6 @@ const (
 	FINGER_INFO_CMD   = byte('\x12')
 	IMG_START_CMD     = byte('\x00')
 )
-
-type ChannelMessage (uint8)
-
-func ErrorInfo(err byte) ChannelMessage {
-	switch err {
-	case 0x41:
-		return driver.ERROR_SLIGHT_DOWN
-	case 0x42:
-		return driver.ERROR_SLIGHT_RIGHT
-	case 0x43:
-		return driver.ERROR_SLIGHT_UP
-	case 0x44:
-		return driver.ERROR_SLIGHT_LEFT
-	case 0xfb:
-		return driver.ERROR_SENSOR_DIRTY
-	case 0xfd:
-		return driver.ERROR_UNENROLLED
-	case 0xfe:
-		return driver.ERROR_MAX_ENROLLED
-	default:
-		return driver.ERROR_UNKNOWN
-	}
-}
 
 func CreateOutInEndpoint(i *gousb.Interface) (*gousb.OutEndpoint, *gousb.InEndpoint, error) {
 	out, err := i.OutEndpoint(1)

@@ -1,7 +1,6 @@
 package elan
 
 import (
-	"github.com/brys0/elan-driver-go/internal/usb"
 	"github.com/google/gousb"
 )
 
@@ -29,17 +28,17 @@ func NewRealDriver(iface *gousb.Interface) *HardwareDriver {
 }
 
 func (d *HardwareDriver) Total() (*uint8, error) {
-	out, in, err := usb.CreateOutInEndpoint(d.iface)
+	out, in, err := CreateOutInEndpoint(d.iface)
 
 	if err != nil {
 		return nil, err
 	}
 
-	cmd := usb.CommandStart(allocate_command)
-	cmd[2] = usb.VERIFY_CMD
+	cmd := CommandStart(allocate_command)
+	cmd[2] = VERIFY_CMD
 
 	writtenLength, err := out.Write(cmd)
-	err = usb.CheckLength(writtenLength, 3)
+	err = CheckLength(writtenLength, 3)
 
 	if err != nil {
 		return nil, err
@@ -48,7 +47,7 @@ func (d *HardwareDriver) Total() (*uint8, error) {
 	read := make([]byte, 2)
 
 	readLength, err := in.Read(read)
-	err = usb.CheckLength(readLength, 3)
+	err = CheckLength(readLength, 3)
 
 	if err != nil {
 		return nil, err

@@ -92,8 +92,8 @@ func (d *MockDriver) Enroll(totalSamples uint8, data string, ch *chan ChannelMes
 	}
 	nextID := *total + 1
 
-	if nextID == maxEnrollments {
-		log.Error("max enrollments reached", "max", maxEnrollments)
+	if nextID == MaxEnrollments {
+		log.Error("max enrollments reached", "max", MaxEnrollments)
 		if ch != nil {
 			*ch <- ERROR_MAX_ENROLLED
 		}

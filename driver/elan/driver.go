@@ -9,6 +9,7 @@ import (
 const (
 	MaxEnrollments = 10
 
+	VENDOR_ELAN  = 0x04f3
 	SAMPLE_VALID = ChannelMessage(iota)
 	ERROR_SLIGHT_DOWN
 	ERROR_SLIGHT_RIGHT
